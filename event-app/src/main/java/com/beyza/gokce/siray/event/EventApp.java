@@ -23,19 +23,12 @@ import java.util.Arrays;
  *          and handles exceptions.
  * @author ugur.coruh
  */
-public class EventApp {
-		   static int[] hashTable = new int[100]; // Hash tablonuzun boyutunu gerektiği gibi ayarlayın.
-		    public static void main(String[] args) {
-		        Arrays.fill(hashTable, 0); 
-		        loadHashTableFromFile();
-		        mainMenu();
-		    }
-		    public static void loadHashTableFromFile() {
-		    }
+import java.util.Arrays;
 
-		    // Ana menü metodunu tanımlamanız gerekiyor.
-		    public static void mainMenu() {
-		        // Implement the main menu logic here.
-		    }
-		
-	}
+public class EventApp {
+    public static void main(String[] args) {
+        Event.loadHashTableFromFile(); // Event sınıfındaki yöntemi çağırıyoruz
+        Event.mainMenu(); // Event sınıfındaki mainMenu metodunu çağırıyoruz
+    }
+}
+
