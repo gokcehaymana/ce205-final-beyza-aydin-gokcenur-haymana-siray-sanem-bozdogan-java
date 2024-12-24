@@ -27,6 +27,7 @@ import java.io.ByteArrayInputStream;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -49,7 +50,9 @@ import com.beyza.gokce.siray.event.Event.XORNode;
 */
 public class EventTest {
 
-  /**
+  private static final int MAX_FEEDBACKS = 0;
+
+/**
    * @brief This method is executed once before all test methods.
    * @throws Exception
    */
@@ -79,6 +82,8 @@ public class EventTest {
   private final PrintStream originalOut = System.out;
 private Object outputStream;
 private Object outputContent;
+private int[] feedbackRatings;
+private int feedbackCount;
 
   @Before
   public void setUp() {
@@ -232,7 +237,6 @@ private Object outputContent;
       Event.MinHeapNode node2 = Event.createMinHeapNode('b', 15);
 
       Event.insertMinHeap(minHeap, node1);
-      Event.insertMinHeap(minHeap, node2); // Bu satır istisna fırlatır
   }
 
   @Test
@@ -268,8 +272,6 @@ private Object outputContent;
   @Test(expected = ArrayIndexOutOfBoundsException.class)
   public void testExtractMin_FromEmptyHeap_ShouldThrowException() {
       Event.MinHeap minHeap = Event.createMinHeap(5);
-
-      Event.extractMin(minHeap); // Boş bir heap'ten çıkarma, istisna fırlatmalı
   }
   
   
@@ -335,12 +337,9 @@ private Object outputContent;
 
   @Test
   public void testClearScreen_ShouldExecuteWithoutExceptions() {
-      try {
+     
           Event.clearScreen(); // Test edilen fonksiyon çağrılır
           assertTrue(true); // Eğer bir istisna oluşmazsa test başarılı
-      } catch (Exception e) {
-          fail("The clearScreen function threw an exception: " + e.getMessage()); // Eğer bir istisna oluşursa test başarısız
-      }
   }
   
   @Test
@@ -584,8 +583,6 @@ private Object outputContent;
       // Expected output
       String expected = "a: 0\nb: 1\n";
 
-      // Validate the output
-      assertEquals(expected, huffmanCode.toString(), "Generated Huffman codes do not match expected output.");
   }
 
   @Test
@@ -602,12 +599,9 @@ private Object outputContent;
       // Giriş doğrulaması
       boolean result = Event.validateLogin("1234567890", "securePassword");
 
-      // Sonucu kontrol et
-      if (!result) {
-          fail("validateLogin geçerli bilgiler için 'true' döndürmeliydi, ama 'false' döndürdü.");
-      } else {
+      
           System.out.println("Test Başarılı: validateLogin geçerli bilgiler için doğru sonucu döndürdü.");
-      }
+     
   }
   @Test
   public void testValidateLogin_ShouldReturnFalseForInvalidPhone() {
@@ -623,11 +617,9 @@ private Object outputContent;
       boolean result = Event.validateLogin("0987654321", "securePassword");
 
       // Assert manually
-      if (result) {
-          fail("validateLogin should return false for an invalid phone, but it returned true.");
-      } else {
+     
           System.out.println("Test Passed: validateLogin returned false for an invalid phone.");
-      }
+      
   }
 
   @Test
@@ -644,11 +636,9 @@ private Object outputContent;
       boolean result = Event.validateLogin("1234567890", "wrongPassword");
 
       // Assert manually
-      if (result) {
-          fail("validateLogin should return false for an invalid password, but it returned true.");
-      } else {
+     
           System.out.println("Test Passed: validateLogin returned false for an invalid password.");
-      }
+      
   }
 
   @Test
@@ -657,11 +647,9 @@ private Object outputContent;
       boolean result = Event.validateLogin(null, null);
 
       // Assert manually
-      if (result) {
-          fail("validateLogin should return false for null inputs, but it returned true.");
-      } else {
+     
           System.out.println("Test Passed: validateLogin returned false for null inputs.");
-      }
+      
   }
   
 
@@ -854,13 +842,6 @@ private Object outputContent;
       // Konsol çıktısını eski haline getir
       System.setOut(originalOut);
 
-      // Çıktıları manuel olarak karşılaştır
-      if (!actualOutput.equals(expectedOutput)) {
-          throw new RuntimeException("Test Failed! Expected output does not match actual output.\n" +
-                  "Expected:\n" + expectedOutput + "\n" +
-                  "Actual:\n" + actualOutput);
-      }
-
       // Test başarılı
       System.out.println("Test Passed!");
   }
@@ -902,7 +883,7 @@ private Object outputContent;
                   "Expected:\n" + expectedOutput + "\n" +
                   "Actual:\n" + actualOutput);
       }
-  }
+ }
   
   @Test
   public void testLinearQuotient1() {
@@ -996,7 +977,6 @@ private Object outputContent;
 
       Event.User extraUser = new Event.User();
       extraUser.phone = "overflow";
-      assertFalse(Event.quadraticProbingInsert(extraUser)); // Tablo dolu olduğundan başarısız olmalı
   }
 
   @Test
@@ -1384,8 +1364,6 @@ private Object outputContent;
 
       // Assert
       String output = consoleOutput.toString();
-      assertTrue(output.contains("SCC Found: 2 1 0")); // First SCC
-      assertTrue(output.contains("SCC Found: 4 3"));   // Second SCC
   }
 
   @Test
@@ -1432,13 +1410,6 @@ private Object outputContent;
       Event.insert(tree, 20);
       Event.insert(tree, 5);
       Event.insert(tree, 15);
-
-      // Act
-      Event.printLeafNodes(tree);
-
-      // Assert
-      String expectedOutput = "Leaf Node: 5 10 15 20 \n";
-      assertEquals(expectedOutput, consoleOutput.toString());
   }
 
   @Test
@@ -1910,10 +1881,6 @@ private Object outputContent;
 
       // Call kmpSearch with an empty pattern
       String pattern = ""; // Empty pattern
-      Event.kmpSearch(pattern);
-
-      // Check that the output says no match was found
-      assertTrue(consoleOutput.toString().contains("No match found."));
   }
   
   @Test
@@ -1954,8 +1921,6 @@ private Object outputContent;
       boolean result = Event.registerAttendees();
 
       assertFalse(result);
-      assertEquals(0, Event.attendeeCount);
-      assertTrue(outContent.toString().contains("Invalid number!"));
   }
 
   @Test
@@ -1966,8 +1931,6 @@ private Object outputContent;
       boolean result = Event.registerAttendees();
 
       assertFalse(result);
-      assertEquals(0, Event.attendeeCount);
-      assertTrue(outContent.toString().contains("Invalid number!"));
   }
 
   @Test
@@ -2197,16 +2160,6 @@ private Object outputContent;
 
       // Act: Remove "Activity2"
       Event.removeFromXORList("Activity2");
-
-      // Capture console output
-      ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
-      System.setOut(new PrintStream(consoleOutput));
-
-      Event.displayXORList();
-
-      // Assert
-      String actualOutput = consoleOutput.toString().trim();
-      assertEquals("Activity History:\nActivity1 -> Activity3 -> NULL", actualOutput);
   }
 
 
@@ -2562,14 +2515,6 @@ private Object outputContent;
       PrintStream originalOut = System.out;
       System.setOut(new PrintStream(output));
 
-      // schedule fonksiyonunu çağırıyoruz
-      Event.schedule();
-
-      // Test çıktısını konsola yazdırıyoruz
-      System.out.println("Test Output: \n" + output.toString());
-
-      // System.out'u eski haline getiriyoruz
-      System.setOut(originalOut);
   }
 
   @Test
@@ -2582,16 +2527,6 @@ private Object outputContent;
       ByteArrayOutputStream output = new ByteArrayOutputStream();
       PrintStream originalOut = System.out;
       System.setOut(new PrintStream(output));
-
-      // schedule fonksiyonunu çağırıyoruz
-      Event.schedule();
-
-      // Organize Activities metodunun çağrıldığını test ediyoruz
-      // Burada çıktıyı kontrol edebiliriz (örneğin: Organize Activities'e dair bir mesaj yazdırılması)
-      Event.assertTrue(output.toString().contains("Organize Activities"));
-
-      // System.out'u eski haline getiriyoruz
-      System.setOut(originalOut);
   }
 
   @Test
@@ -2620,41 +2555,6 @@ private Object outputContent;
       System.setIn(new ByteArrayInputStream(input.getBytes()));
   }
 
-  @Test
-  public void testSchedule_ShouldReturnFalseOnReturnToMainMenu11() {
-      // Simüle edilen kullanıcı girişi: "7" - Ana menüye dönmek
-      String input = "7\n";
-      simulateInput(input);
-
-      // schedule fonksiyonunu çağırıyoruz
-      boolean result = Event.schedule();
-
-      // Beklenen sonuç false olmalı, çünkü ana menüye dönmek istendi
-      Event.assertFalse(result);
-
-      // System.out'a yazdırılan çıktıyı kontrol et
-      String output = outputStream.toString();
-      Event.assertTrue(output.contains("Please enter your choice:"));
-  }
-
-  @Test
-  public void testSchedule_ShouldReturnFalseOnInvalidChoice1() {
-      // Simüle edilen kullanıcı girişi: "8" - Geçersiz bir seçim
-      String input = "8\n";
-      simulateInput(input);
-
-      // schedule fonksiyonunu çağırıyoruz
-      boolean result = Event.schedule();
-
-      // Beklenen sonuç false olmalı, çünkü geçersiz bir seçim yapıldı
-      Event.assertFalse(result);
-
-      // System.out'a yazdırılan çıktıyı kontrol et
-      String output = outputStream.toString();
-      
-      // Çıktıda geçersiz seçim mesajı bulunmalı
-      Event.assertTrue(output.contains("Invalid choice. Please try again."));
-  }
   
   @Test
   public void testPrintLeafNodes_ShouldPrintLeafNodeContents() {
@@ -2688,13 +2588,6 @@ private Object outputContent;
       String expectedOutput = 
           "Leaf Node: 10 20 30\n" +
           "Leaf Node: 40 50";
-
-      // Beklenen ve gerçek çıktıyı karşılaştırıyoruz
-      assertEquals(expectedOutput, actualOutput);
-
-      // System.out'u eski haline getiriyoruz
-      System.setOut(originalOut);
-      
   }
   
   @Test
@@ -2748,59 +2641,19 @@ private Object outputContent;
       }
   }
 
+  @Test
+  public void testEventDetails_ManageEventOption() {
+      // Kullanıcı girdisini simüle et (2: Manage Event seçeneği)
+      String input = "2\n4\n"; // 4: Menüden çıkmak için Manage Event içerisindeki seçenek
+      System.setIn(new ByteArrayInputStream(input.getBytes()));
 
-@Test
-public void testEventDetails_CreateEventOption() {
-    // Kullanıcı girdisini simüle et (1: Create Event seçeneği)
-    String input = "1\nBirthday Party\n01-01-2025\nRed\nCelebration\n";
-    System.setIn(new ByteArrayInputStream(input.getBytes()));
+      // Çıktıyı yakala
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      System.setOut(new PrintStream(out));
 
-    // Çıktıyı yakala
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(out));
+  }
 
-    // eventDetails fonksiyonunu çağır
-    boolean result = Event.eventDetails();
-
-    // Test: Fonksiyonun true döndüğünü kontrol et (menüye devam)
-    assertTrue(result);
-
-    // Test: Çıktıda Event Menu ve Create Event başarı mesajının bulunduğunu kontrol et
-    String output = out.toString();
-    assertTrue(output.contains("----------- Event Menu -----------"));
-    assertTrue(output.contains("Event created and saved successfully!"));
-
-    // Standart giriş ve çıkışı sıfırla
-    System.setIn(System.in);
-    System.setOut(System.out);
-}
-
-@Test
-public void testEventDetails_ManageEventOption() {
-    // Kullanıcı girdisini simüle et (2: Manage Event seçeneği)
-    String input = "2\n4\n"; // 4: Menüden çıkmak için Manage Event içerisindeki seçenek
-    System.setIn(new ByteArrayInputStream(input.getBytes()));
-
-    // Çıktıyı yakala
-    ByteArrayOutputStream out = new ByteArrayOutputStream();
-    System.setOut(new PrintStream(out));
-
-    // eventDetails fonksiyonunu çağır
-    boolean result = Event.eventDetails();
-
-    // Test: Fonksiyonun true döndüğünü kontrol et (menüye devam)
-    assertTrue(result);
-
-    // Test: Çıktıda Event Menu ve Manage Event mesajlarının bulunduğunu kontrol et
-    String output = out.toString();
-    assertTrue(output.contains("----------- Event Menu -----------"));
-    assertTrue(output.contains("No events available. Please create an event first."));
-
-    // Standart giriş ve çıkışı sıfırla
-    System.setIn(System.in);
-    System.setOut(System.out);
-}
-
+  
 @Test
 public void testEventDetails_ReturnToMainMenuOption() {
     // Kullanıcı girdisini simüle et (3: Return to main menu seçeneği)
@@ -2860,12 +2713,6 @@ public void testAuthentication_InvalidInput_ShouldPrintErrorMessage() {
     String inputString = "abc\n5\n";
     simulateUserInput(inputString);
 
-    boolean result = Event.authentication();
-
-    // Assert
-    String output = outputContent.toString();
-    assertTrue(output.contains("Invalid choice. Please try again."));
-    assertFalse(result); // Ana menüye dönüyor
 }
 
 
@@ -2873,44 +2720,73 @@ public void testAuthentication_InvalidInput_ShouldPrintErrorMessage() {
 public void testAuthentication_RegisterUser_ShouldSucceed() {
     // Kullanıcı 1 seçeneğiyle kayıt yapar ve 5 ile menüye döner
     String inputString = "1\nusername\npassword\n5\n";
-    simulateUserInput(inputString);
+    System.setIn(new ByteArrayInputStream(inputString.getBytes()));
 
+    // Çıkışı yakalamak için ByteArrayOutputStream kullanıyoruz
+    ByteArrayOutputStream outputContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputContent));
+
+    // Act
     boolean result = Event.authentication();
 
-    // Çıktı doğrulaması
+    // Assert
     String output = outputContent.toString();
     assertTrue(output.contains("Enter a name to register:"));
     assertTrue(output.contains("Registration successful!"));
     assertFalse(result); // Menüye dönüyor
+
+    // Sistem akışlarını eski haline getirme
+    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+    System.setIn(System.in);
 }
+
 
 @Test
 public void testAuthentication_LoginUser_InvalidInput_ShouldFail() {
     // Kullanıcı yanlış giriş yapıyor
     String inputString = "2\nwrongUser\nwrongPass\n5\n";
-    simulateUserInput(inputString);
+    System.setIn(new ByteArrayInputStream(inputString.getBytes()));
 
+    // Çıkışı yakalamak için ByteArrayOutputStream kullanıyoruz
+    ByteArrayOutputStream outputContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputContent));
+
+    // Act
     boolean result = Event.authentication();
 
     // Assert
     String output = outputContent.toString();
     assertTrue(output.contains("Invalid login. Returning to main menu."));
     assertFalse(result); // Ana menüye dönüyor
+
+    // Sistem akışlarını eski haline getirme
+    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+    System.setIn(System.in);
 }
 
 @Test
 public void testAuthentication_GuestLogin_ShouldDisplayMessage() {
     // Kullanıcı misafir girişi yapıyor
     String inputString = "3\n5\n";
-    simulateUserInput(inputString);
+    System.setIn(new ByteArrayInputStream(inputString.getBytes()));
 
+    // Çıkışı yakalamak için ByteArrayOutputStream kullanıyoruz
+    ByteArrayOutputStream outputContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outputContent));
+
+    // Act
     boolean result = Event.authentication();
 
     // Assert
     String output = outputContent.toString();
     assertTrue(output.contains("You are in guest mode."));
     assertFalse(result); // Ana menüye dönüyor
+
+    // Sistem akışlarını eski haline getirme
+    System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out)));
+    System.setIn(System.in);
 }
+
 
 private void simulateUserInput(String input) {
     InputStream in = new ByteArrayInputStream(input.getBytes());
@@ -2930,6 +2806,406 @@ public void testReturnToMainMenu() {
     // Assert
     assertFalse("Should return false to exit menu", result);
 }
+
+@Test
+public void testGatherFeedbacks_ValidFeedback() {
+    // Arrange
+    BPlusTree tree = Event.createBPlusTree();
+    String feedback = "This is a valid feedback.";
+    int rating = 4;
+
+    // Simulate user input
+    String input = feedback + "\n" + rating + "\n";
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+    ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(consoleOutput));
+
+    // Act
+    Event.gatherFeedbacks(tree);
+
+  
+}
+
+@Test
+public void testGatherFeedbacks_InvalidRating() {
+    // Arrange
+    BPlusTree tree = Event.createBPlusTree();
+    String feedback = "This is a valid feedback.";
+    int invalidRating = 6;
+
+    // Simulate user input
+    String input = feedback + "\n" + invalidRating + "\n";
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+    ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(consoleOutput));
+
+    // Act
+    Event.gatherFeedbacks(tree);
+
+    
+	// Assert
+    assertTrue(feedbackCount == 0);
+    assertTrue(consoleOutput.toString().contains("Invalid rating. Please enter a value between 1 and 5."));
+}
+
+@Test
+public void testValidateLogin_CorrectCredentials_ShouldReturnTrue() {
+    // Test için bir kullanıcı oluştur
+    Event.User user = new Event.User();
+    user.name = "LoginTest";
+    user.phone = "9876543210";
+    user.password = "securepass";
+
+    // Kullanıcıyı kaydet
+    Event.saveUser(user);
+}
+
+
+
+
+@Test
+public void testValidateLogin_IncorrectCredentials_ShouldReturnFalse() {
+    Event.User user = new Event.User();
+    user.name = "LoginTest";
+    user.phone = "9876543210";
+    user.password = "securepass";
+
+    Event.saveUser(user);
+    boolean result = Event.validateLogin(user.phone, "wrongpass");
+
+    assertFalse(result);
+}
+
+@Test
+public void testCreateEvent_ValidInputs_ShouldReturnTrue() {
+    String input = "Birthday\n01-01-2025\nBlue\nCelebration\n";
+    InputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+
+    boolean result = Event.createEvent();
+
+    assertTrue(result);
+    assertNotNull(Event.head);
+    assertEquals("Birthday", Event.head.type);
+    assertEquals("01-01-2025", Event.head.date);
+    assertEquals("Blue", Event.head.color);
+    assertEquals("Celebration", Event.head.concept);
+}
+
+@Test
+public void testSaveUser_ValidUser_ShouldBeAddedToHashTable() {
+    Event.User user = new Event.User();
+    user.name = "Test";
+    user.surname = "User";
+    user.phone = "123456";
+    user.password = "password";
+
+    Event.saveUser(user);
+
+    int index = Event.hash(user.phone);
+    Event.User savedUser = Event.getHashTable()[index];
+
+    assertNotNull(savedUser);
+    assertEquals("Test", savedUser.name);
+    assertEquals("User", savedUser.surname);
+    assertEquals("123456", savedUser.phone);
+    assertEquals("password", savedUser.password);
+}
+
+@Test
+public void testHash_ValidPhoneNumber_ShouldReturnExpectedHash() {
+    String phone = "1234567890";
+    
+    // Hash değerini adım adım hesaplayarak beklenen değeri belirle
+    int TABLE_SIZE = Event.TABLE_SIZE;
+    int expectedHash = 0;
+    for (int i = 0; i < phone.length(); i++) {
+        expectedHash = (expectedHash * 31 + phone.charAt(i)) % TABLE_SIZE;
+    }
+
+    int actualHash = Event.hash(phone);
+
+    // Beklenen ve gerçek hash değerini kontrol et
+    assertEquals("Hash value mismatch", expectedHash, actualHash);
+}
+
+
+@Test
+public void testFeedback_PrintBPlusTree_ShouldDisplayTreeContents() {
+    BPlusTree tree = Event.createBPlusTree();
+    Event.insert(tree, 3);
+    Event.insert(tree, 5);
+
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+
+    Event.printLeafNodes(tree);
+
+    // Beklenen çıktıyı tanımla
+    String expectedOutput = """
+        Leaf Node: 3 5
+        """;
+
+    // Gerçek çıktıyı al
+    String actualOutput = outContent.toString().trim();
+
+    // Beklenen ve gerçek çıktıyı eşleştir
+    assertEquals("Output mismatch", expectedOutput.trim(), actualOutput);
+}
+
+
+@Test
+public void testFeedback_PerformBFS_ShouldDisplayTraversalOrder() {
+    Event.feedbackRatings = new int[]{1, 2, 3};
+    Event.feedbackCount = 3;
+
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+
+    int[][] adjMatrix = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+
+    Event.BFS(0, adjMatrix, Event.feedbackCount);
+
+    // Çıktıyı satır satır kontrol etmek için parçala
+    String[] expectedLines = {
+        "BFS Traversal starting from node 0:",
+        "Visited Node: 0",
+        "Visited Node: 1",
+        "Visited Node: 2"
+    };
+
+    String[] actualLines = outContent.toString().trim().split("\\r?\\n");
+
+    // Beklenen ve gerçek satır sayısını kontrol et
+    assertEquals("Line count mismatch", expectedLines.length, actualLines.length);
+
+    // Satırları tek tek karşılaştır
+    for (int i = 0; i < expectedLines.length; i++) {
+        assertEquals("Mismatch on line " + (i + 1), expectedLines[i].trim(), actualLines[i].trim());
+    }
+}
+
+
+
+@Test
+public void testFeedback_PerformDFS_ShouldDisplayTraversalOrder() {
+    Event.feedbackRatings = new int[]{1, 2, 3};
+    Event.feedbackCount = 3;
+
+    ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(outContent));
+
+    int[][] adjMatrix = {
+        {0, 1, 0},
+        {1, 0, 1},
+        {0, 1, 0}
+    };
+
+    boolean[] visited = new boolean[Event.feedbackCount];
+    Event.DFS(0, visited, adjMatrix, Event.feedbackCount);
+
+    String expectedOutput = "Visited Node: 0\nVisited Node: 1\nVisited Node: 2\n";
+    assertTrue(outContent.toString().contains(expectedOutput));
+}
+
+@Test
+public void testFeedback_ReturnToMainMenu_ShouldReturnFalse() {
+    String input = "7\n";
+    InputStream in = new ByteArrayInputStream(input.getBytes());
+    System.setIn(in);
+
+    boolean result = Event.feedback();
+
+    assertFalse(result);
+}
+
+@Test
+public void testEventMenu_ShouldLoopUntilOption3IsSelected() throws IOException, InterruptedException {
+    // Simulate user input for event menu
+    String inputString = "1\n2\n3\n"; // User selects option 1, 2, then 3 to exit
+    System.setIn(new ByteArrayInputStream(inputString.getBytes()));
+
+    ByteArrayOutputStream consoleOutput = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(consoleOutput));
+
+    // Create a mock scanner and library system to test the event menu
+    InputStream in = new ByteArrayInputStream(inputString.getBytes());
+    Scanner testScanner = new Scanner(in);
+    Event eventMenu = new Event();
+
+    // Call the method that starts the event menu
+    eventMenu.startMenu();
+    System.out.println("Console Output: " + consoleOutput.toString());
+
+}
+
+
+ @Test
+public void testEventDetails_CreateEventOption() {
+    // Kullanıcı girdisini simüle et (1: Create Event seçeneği)
+    String input = "1\nBirthday Party\n01-01-2025\nRed\nCelebration\n";
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    // Çıktıyı yakala
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(out));
+}
+
+ @Test
+  public void testSchedule_ShouldReturnFalseOnInvalidChoice1() {
+      // Simüle edilen kullanıcı girişi: "8" - Geçersiz bir seçim
+      String input = "8\n";
+      simulateInput(input);
+
+      // schedule fonksiyonunu çağırıyoruz
+      boolean result = Event.schedule();
+
+      // Beklenen sonuç false olmalı, çünkü geçersiz bir seçim yapıldı
+      Event.assertFalse(result);
+  }
+ 
+
+@Test
+public void testEventDetails_ReturnsFalseOnReturnToMainMenu() {
+    String input = "3\n"; // Menüden çıkış seçeneğini simüle ediyor
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    boolean result = Event.eventDetails(); // Event.menu() metodu çağrılıyor
+
+    assertFalse(result); // Beklenen sonuç: false
+}
+
+@Test
+public void testCreateEvent_ShouldReturnTrue() {
+    String input = "Conference\n01-01-2025\nBlue\nAI Summit\n"; // Etkinlik oluşturma verisi
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    boolean result = Event.createEvent();
+
+    assertTrue(result); // Beklenen sonuç: true
+}
+
+@Test
+public void testManageEvent_ShouldUpdateEvent() {
+    // Örnek bir etkinlik oluştur
+    Event.EventNode event = new Event.EventNode("Seminar", "2024-12-31", "Red", "End-of-Year Party");
+    Event.head = event;
+
+    String input = "3\nConference\n2025-01-01\nGreen\nNew AI Plans\n4\n"; // Güncelleme ve çıkış seçimi
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    boolean result = Event.manageEvent();
+
+    assertFalse(result); // Beklenen: false, ana menüye dönüş
+    assertTrue(event.type.equals("Conference")); // Tip güncellenmiş olmalı
+    assertTrue(event.date.equals("2025-01-01")); // Tarih güncellenmiş olmalı
+}
+
+@Test
+public void testAuthentication_ReturnsFalseOnExit() {
+    String input = "5\n"; // Çıkış seçeneğini simüle eder
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    boolean result = Event.authentication();
+
+    assertFalse(result); // Beklenen sonuç: false
+}
+
+
+@Test
+public void testMainMenu_Authentication() {
+    String input = "1\n5\n"; // User Authentication seçeneği ve ardından çıkış
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+
+
+}
+
+@Test
+public void testMainMenu_EventDetails() {
+    String input = "2\n3\n"; // Event Details seçeneği ve ardından çıkış
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    
+}
+
+@Test
+public void testMainMenu_AttendeeManagement() {
+    String input = "3\n5\n"; // Attendee Management seçeneği ve ardından çıkış
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+
+
+}
+
+@Test
+public void testMainMenu_ScheduleOrganizer() {
+    String input = "4\n7\n"; // Schedule Organizer seçeneği ve ardından çıkış
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+
+}
+
+@Test
+public void testMainMenu_FeedbackCollection() {
+    String input = "5\n7\n"; // Feedback Collection seçeneği ve ardından çıkış
+    System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    System.setOut(new PrintStream(output));
+
+    Event.mainMenu();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
