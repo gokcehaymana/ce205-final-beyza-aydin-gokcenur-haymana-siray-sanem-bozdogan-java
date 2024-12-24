@@ -12,13 +12,10 @@ package com.beyza.gokce.siray.event;
 
 import java.io.*;
 import java.util.*;
-import java.util.Scanner;
 import java.io.FileOutputStream;
 import java.io.ObjectOutputStream;
 import java.io.IOException;
 import java.io.Serializable;
-import java.util.Queue;
-import java.util.LinkedList;
 
 /**
  * @class Event
@@ -27,24 +24,29 @@ import java.util.LinkedList;
  * @author ugur.coruh
  */
 public class Event {
-	private static final int MAX_FEEDBACKS = 10; // Maksimum geri bildirim sayısı
-	private static int[] feedbackRatings = new int[MAX_FEEDBACKS];
-	private static int feedbackCount = 0;
+ static final int MAX_FEEDBACKS = 10; // Maksimum geri bildirim sayısı
+	static int[] feedbackRatings = new int[MAX_FEEDBACKS];
+	static int feedbackCount = 0;
 
 	// Hash fonksiyonu
 	public static int hash(String phone) {
 	    int hash = 0;
-	    for (int i = 0; i < phone.length(); i++) {
+	    for (int i = 0; i < phone.length(); i++) { 
 	        hash = (hash * 31 + phone.charAt(i)) % TABLE_SIZE;
 	    }
 	    return hash;
 	}
 	
+	// Event sınıfına ekleyin
+	public static User[] getHashTable() {
+	    return hashTable;
+	}
+
 	
 	// Function to clear the screen
 	public static void clearScreen() {
 	    String os = System.getProperty("os.name").toLowerCase();
-	    if (os.contains("win")) {
+	    if (os.contains("win")) { 
 	        try {
 	            new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();  // for Windows
 	        } catch (Exception e) {
@@ -129,6 +131,14 @@ public class Event {
 	    String phone;
 	    String password;
 	    User next;  // We use linked list to resolve collisions
+		public void setPassword(String string) {
+			// TODO Auto-generated method stub
+			
+		}
+		public void setEmail(String string) {
+			// TODO Auto-generated method stub
+			
+		}
 	}
 	class Event1 {
 	    String type;      // Event type
@@ -148,7 +158,7 @@ public class Event {
 	        this.next = null;  // Initially, no next event
 	    }
 	}
-	private static User[] hashTable = new User[TABLE_SIZE]; // Sınıf düzeyinde tanımlama
+	public static User[] hashTable = new User[TABLE_SIZE]; // Sınıf düzeyinde tanımlama
 	// Kullanıcıyı hash tablosuna kaydetme
 	public static void saveUser(User newUser) {
 	    int index = hash(newUser.phone);
@@ -197,6 +207,7 @@ public class Event {
 	        e.printStackTrace();
 	    }
 	}
+	
 	public static void saveHashTableToFile() {
 		// Hash table definition
 		User[] hashTable = new User[TABLE_SIZE];
@@ -327,7 +338,7 @@ public class Event {
 	    }
 	}
 	// Register yöntemi
-	private static void Register(Scanner scanner) {
+	static void Register(Scanner scanner) {
 	    System.out.print("Enter a name to register: ");
 	    String username = scanner.nextLine();
 	    System.out.print("Enter a password: ");
@@ -565,7 +576,7 @@ public class Event {
 
 	
 	 // Kullanıcı bilgilerini saklamak için bir HashMap
-    private static Map<String, String> users = new HashMap<>();
+    static Map<String, String> users = new HashMap<>();
 
     public static boolean authentication() {
         Scanner scanner = new Scanner(System.in);
@@ -612,7 +623,7 @@ public class Event {
         }
     }
 
-    private static boolean logIn(Scanner scanner) {
+    static boolean logIn(Scanner scanner) {
         System.out.print("Enter your name: ");
         String username = scanner.nextLine();
         System.out.print("Enter your password: ");
@@ -622,7 +633,7 @@ public class Event {
         return users.containsKey(username) && users.get(username).equals(password);
     }
 
-    private static void guest() {
+    static void guest() {
         System.out.println("You are in guest mode.");
     }
     public static void handleFileOperation(int choice) {
@@ -655,9 +666,10 @@ public class Event {
 	            System.out.println("Invalid choice. Please try again.");
 	    }
 	}
+ 
     private static Scanner scanner = new Scanner(System.in); // Sınıf düzeyinde tanımlama
 
-    private static void fileOperationsMenu() {
+    static void fileOperationsMenu() {
         System.out.println("----------- File Operations Menu -----------");
         System.out.println("1. Progressive Overflow");
         System.out.println("2. Linear Probing");
@@ -669,13 +681,13 @@ public class Event {
         System.out.println("8. Return to Authentication Menu");
         System.out.print("Please enter your choice: ");
 
-        int fileOperationChoice = scanner.nextInt(); // `scanner` erişilebilir hale geldi
-        handleFileOperation(fileOperationChoice); // `choice` hatası çözüldü
+        int fileOperationChoice = scanner.nextInt(); // scanner erişilebilir hale geldi
+        handleFileOperation(fileOperationChoice); // choice hatası çözüldü
     }
 
  
  // Static head and tail for the doubly linked list
-    private static EventNode head = null;
+    static EventNode head = null;
     private static EventNode tail = null;
 
     // Static inner class for EventNode (renamed to avoid duplication)
@@ -852,8 +864,8 @@ public class Event {
     public static final int MAX_ATTENDEES = 100;
     public static final int MAX_NAME_LENGTH = 50;
 
-    private static Attendee[] attendees = new Attendee[MAX_ATTENDEES];
-    private static int attendeeCount = 0;
+    static Attendee[] attendees = new Attendee[MAX_ATTENDEES];
+    static int attendeeCount = 0;
 
     
 
@@ -925,7 +937,7 @@ public static class Attendee implements Serializable {
             }
         }
     }
-
+    
     // Function to compress and store the Huffman code for each attendee's name
     public static void compressAttendeeName(Attendee attendee) {
         int len = attendee.nameAttendee.length();
@@ -984,8 +996,8 @@ public static class Attendee implements Serializable {
         System.out.printf("%d attendees have been registered and stored in binary format.\n", count);
         return true;
     }
-
-    // Custom ObjectOutputStream class (for appending operations)
+    
+ // Custom ObjectOutputStream class (for appending operations)
     static class AppendObjectOutputStream extends ObjectOutputStream {
         public AppendObjectOutputStream(OutputStream out) throws IOException {
             super(out);
@@ -1179,639 +1191,3 @@ public static class Attendee implements Serializable {
     }
 	
 
-    // Function to initialize the XOR linked list
-    public static void initializeXORList() {
-        xorHead = null;  // Initialize head as null
-    }
-
-    // Function to initialize the sparse matrix
-    public static void initializeSparseMatrix() {
-        activityMatrix.size = 0;  // Initialize size to zero
-    }
-
-    // Function to initialize the stack
-    public static void initializeStack() {
-        activityStack.top = -1;  // Stack is empty
-    }
-
-    // Function to initialize the queue
-    public static void initializeQueue() {
-        activityQueue.front = 0;
-        activityQueue.rear = 0;  // Queue is empty
-    }
-
-    // Function to check if stack is full
-    public static boolean isStackFull() {
-        return activityStack.top == STACK_SIZE - 1;
-    }
-
-    // Function to check if stack is empty
-    public static boolean isStackEmpty() {
-        return activityStack.top == -1;
-    }
-
-    // Function to push activity onto stack
-    public static void pushStack(String activity) {
-        if (!isStackFull()) {
-            activityStack.items[++activityStack.top] = activity;
-        } else {
-            System.out.println("Error: Stack is full!");
-        }
-    }
-
-    // Function to pop activity from stack
-    public static void popStack() {
-        if (!isStackEmpty()) {
-            System.out.println("Popped activity: " + activityStack.items[activityStack.top--]);
-        } else {
-            System.out.println("Error: Stack is empty!");
-        }
-    }
-
-    // Function to check if queue is full
-    public static boolean isQueueFull() {
-        return activityQueue.rear == QUEUE_SIZE;
-    }
-
-    // Function to check if queue is empty
-    public static boolean isQueueEmpty() {
-        return activityQueue.front == activityQueue.rear;
-    }
-    
- // Function to enqueue activity into queue
-    public static void enqueue(String activity) {
-        if (!isQueueFull()) {
-            activityQueue.items[activityQueue.rear++] = activity;
-        }
-        // else {
-        //    System.out.println("Error: Queue is full!");
-        // }
-    }
-
-    // Function to dequeue activity from queue
-    public static void dequeue() {
-        if (!isQueueEmpty()) {
-            System.out.println("Dequeued activity: " + activityQueue.items[activityQueue.front++]);
-        } else {
-            System.out.println("Error: Queue is empty!");
-        }
-    }
-
-    // Function to add an activity to the sparse matrix
-    public static void addActivityToMatrix(int row, int col, String activity) {
-        // Remove the newline character if it exists
-        activity = activity.trim();
-
-        if (activityMatrix.size < MAX_SIZE) {
-            activityMatrix.row[activityMatrix.size] = row;
-            activityMatrix.col[activityMatrix.size] = col;
-            activityMatrix.value[activityMatrix.size] = activity;
-            activityMatrix.size++;
-
-            // Push to stack and enqueue
-            pushStack(activity);
-            enqueue(activity);
-            // Add to XOR linked list
-            addToXORList(activity);  // Adding activity to XOR linked list
-        } else {
-            System.out.println("Error: Sparse matrix is full!");
-        }
-    }
-
-    // Function to display the activities in the sparse matrix
-    public static void displayActivities() {
-        System.out.println("Activities in Sparse Matrix:");
-        for (int i = 0; i < activityMatrix.size; i++) {
-            System.out.printf("Row: %d, Column: %d, Activity: %s\n", 
-                activityMatrix.row[i], activityMatrix.col[i], activityMatrix.value[i]);
-        }
-        System.out.println("Press Enter to continue...");
-        try {
-            System.in.read();  // Wait for user to press Enter
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-	
-
-    // Function to plan timelines
-    public static void planTimelines() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.print("Enter the timeline details (e.g., start and end dates): ");
-        String timeline = scanner.nextLine();  // Get input from user
-        System.out.println("Timeline planned: " + timeline);  // Show entered timeline
-        System.out.println("Press Enter to continue...");
-        try {
-            System.in.read();  // Wait for user to press Enter
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Function to organize activities
-    public static void organizeActivities() {
-        Scanner scanner = new Scanner(System.in);
-        int row, col;
-        
-        System.out.print("Enter the row index for the activity: ");
-        row = scanner.nextInt();
-        System.out.print("Enter the column index for the activity: ");
-        col = scanner.nextInt();
-        scanner.nextLine();  // Clear the buffer
-        
-        System.out.print("Enter the activity details: ");
-        String activity = scanner.nextLine();  // Get input from user
-
-        // Add the activity to the sparse matrix
-        addActivityToMatrix(row, col, activity);
-        System.out.println("Activity organized: " + activity);  // Show entered activity
-        System.out.println("Press Enter to continue...");
-        try {
-            System.in.read();  // Wait for user to press Enter
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // Function to display the schedule submenu
-    public static boolean schedule() {
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        while (true) {
-            System.out.println("----------- Schedule Menu -----------");
-            System.out.println("1. Plan Timelines");
-            System.out.println("2. Organize Activities");
-            System.out.println("3. Display Activities");  // New option to display activities
-            System.out.println("4. Display Activity History");  // Updated option to display XOR activities
-            System.out.println("5. Pop Activity from Stack");  // New option to pop activity from stack
-            System.out.println("6. Dequeue Activity");  // New option to dequeue activity
-            System.out.println("7. Return to Main Menu");
-            System.out.print("Please enter your choice: ");
-
-            // Prompt the user to make a choice
-            choice = scanner.nextInt();
-            scanner.nextLine();  // Clear the buffer
-
-            switch (choice) {
-                case 1:
-                    planTimelines();  // Plan timelines
-                    break;
-                case 2:
-                    organizeActivities();  // Organize activities
-                    break;
-                case 3:
-                    displayActivities();  // Display activities
-                    break;
-                case 4:
-                    displayXORList();  // Display activity history from XOR linked list
-                    break;
-                case 5:
-                    popStack();  // Pop activity from stack
-                    break;
-                case 6:
-                    dequeue();  // Dequeue activity
-                    break;
-                case 7:
-                    return false; // Return to Main Menu
-                default:
-                    System.out.println("Invalid choice. Please try again.");
-                    return false;
-            }
-        }
-    }
- // Function to heapify a subtree with root at given index
-    public static void heapify(int[] arr, int n, int i) {
-        int largest = i;
-        int left = 2 * i + 1;
-        int right = 2 * i + 2;
-
-        if (left < n && arr[left] > arr[largest]) {
-            largest = left;
-        }
-
-        if (right < n && arr[right] > arr[largest]) {
-            largest = right;
-        }
-
-        if (largest != i) {
-            int temp = arr[i];
-            arr[i] = arr[largest];
-            arr[largest] = temp;
-            heapify(arr, n, largest);
-        }
-    }
-
-    // Function to perform heap sort
-    public static void heapSort(int[] arr, int n) {
-        // Build heap (rearrange array)
-        for (int i = n / 2 - 1; i >= 0; i--) {
-            heapify(arr, n, i);
-        }
-
-        // One by one extract elements from heap
-        for (int i = n - 1; i > 0; i--) {
-            int temp = arr[0];
-            arr[0] = arr[i];
-            arr[i] = temp;
-            heapify(arr, i, 0);
-        }
-    }
-
-    // B+ Tree Classes
-    public static class BPlusLeafNode {
-    	public static final int MAX_KEYS = 3;
-        int[] keys = new int[MAX_KEYS];
-        BPlusLeafNode next;
-        int numKeys;
-
-        BPlusLeafNode() {
-            this.numKeys = 0;
-            this.next = null;
-        }
-    }
-
-    public static class BPlusInternalNode {
-    	public static final int MAX_KEYS = 3;
-        int[] keys = new int[MAX_KEYS];
-        Object[] children = new Object[MAX_KEYS + 1]; // Can be internal nodes or leaf nodes
-        int numKeys;
-
-        BPlusInternalNode() {
-            this.numKeys = 0;
-        }
-    }
-
-    public static class BPlusTree {
-        Object root;  // Can be root, internal node, or leaf
-
-        BPlusTree() {
-            this.root = null;
-        }
-    }
-
-    // Function to create a B+ Tree
-    public static BPlusTree createBPlusTree() {
-        BPlusTree tree = new BPlusTree();
-        BPlusLeafNode rootLeaf = new BPlusLeafNode();
-        tree.root = rootLeaf;
-        return tree;
-    }
-
- // Class-level constant
-    public static final int MAX_KEYS = 3;
-  public static  void insertIntoLeaf(BPlusLeafNode leaf, int key) {
-        if (leaf.numKeys < MAX_KEYS) {
-            int i = leaf.numKeys - 1;
-            while (i >= 0 && leaf.keys[i] > key) {
-                leaf.keys[i + 1] = leaf.keys[i];
-                i--;
-            }
-            leaf.keys[i + 1] = key;
-            leaf.numKeys++;
-        } else {
-            // Handle splitting the leaf node
-            BPlusLeafNode newLeaf = new BPlusLeafNode();
-            newLeaf.numKeys = 0;
-            newLeaf.next = leaf.next;
-            leaf.next = newLeaf;
-
-            int mid = MAX_KEYS / 2;
-            newLeaf.numKeys = MAX_KEYS - mid;
-            System.arraycopy(leaf.keys, mid, newLeaf.keys, 0, newLeaf.numKeys);
-            leaf.numKeys = mid;
-
-            // Insert into the correct leaf node
-            if (key > newLeaf.keys[0]) {
-                insertIntoLeaf(newLeaf, key);
-            } else {
-                insertIntoLeaf(leaf, key);
-            }
-        }
-    }
-    // BPlusTree insertion method
-   public static void insert(BPlusTree tree, int key) {
-        BPlusLeafNode root = (BPlusLeafNode) tree.root;
-        if (root.numKeys < MAX_KEYS) {
-            insertIntoLeaf(root, key);
-        } else {
-            // Create a new root and split the leaf
-            BPlusInternalNode newRoot = new BPlusInternalNode();
-            newRoot.numKeys = 1;
-            newRoot.keys[0] = root.keys[MAX_KEYS / 2];
-            newRoot.children[0] = root;
-            BPlusLeafNode newLeaf = new BPlusLeafNode();
-            newLeaf.numKeys = 0;
-            newLeaf.next = null;
-            newRoot.children[1] = newLeaf;
-
-            tree.root = newRoot;
-            insertIntoLeaf(newLeaf, key);
-        }
-    }
-   
- // Static variables required by SCC
-    private static int[] lowLink;           // Low-link values
-    private static int[] discoveryTime;     // Discovery times
-    private static boolean[] inStack;       // To track if a node is in the stack
-    private static int[] stack;             // Stack for Tarjan's Algorithm
-    private static int stackTop;            // Top index of the stack
-    private static int timeCounter;         // Time counter for discovery times
-
-    // Push a node onto the SCC stack
-    private static void pushStackSCC(int node) {
-        stack[++stackTop] = node;
-        inStack[node] = true;
-    }
-
-    // Pop a node from the SCC stack
-    private static int popStackSCC() {
-        int node = stack[stackTop--];
-        inStack[node] = false;
-        return node;
-    }
-
-    // SCC (Tarjan's Algorithm) - Static Method
-    public static void SCC(int node, int[][] adjMatrix, int n) {
-        lowLink[node] = discoveryTime[node] = ++timeCounter; // Set discovery time and low-link value
-        pushStackSCC(node);
-
-        for (int i = 0; i < n; i++) {
-            if (adjMatrix[node][i] != 0) { // If there's a neighbor
-                if (discoveryTime[i] == -1) { // If the neighbor hasn't been discovered
-                    SCC(i, adjMatrix, n);
-                    lowLink[node] = Math.min(lowLink[node], lowLink[i]);
-                } else if (inStack[i]) { // If the neighbor is in the stack
-                    lowLink[node] = Math.min(lowLink[node], discoveryTime[i]);
-                }
-            }
-        }
-
-        // If node is a root of an SCC
-        if (lowLink[node] == discoveryTime[node]) {
-            System.out.print("SCC Found: ");
-            int w;
-            do {
-                w = popStackSCC();
-                System.out.print(w + " ");
-            } while (w != node);
-            System.out.println();
-        }
-    }
-
-    public static void findSCCs(int[][] adjMatrix, int n) {
-        int[] lowLink = new int[n];
-        int[] discoveryTime = new int[n];
-        boolean[] inStack = new boolean[n];
-        int[] stack = new int[n];
-        int stackTop = -1;
-        int timeCounter = 0;
-
-        Arrays.fill(discoveryTime, -1);
-
-        for (int i = 0; i < n; i++) {
-            if (discoveryTime[i] == -1) {
-                SCC(i, adjMatrix, n, lowLink, discoveryTime, inStack, stack, stackTop, timeCounter);
-            }
-        }
-    }
-
-    private static void SCC(int node, int[][] adjMatrix, int n, int[] lowLink, int[] discoveryTime, boolean[] inStack, int[] stack, int stackTop, int timeCounter) {
-        discoveryTime[node] = lowLink[node] = ++timeCounter;
-        stack[++stackTop] = node;
-        inStack[node] = true;
-
-        for (int i = 0; i < n; i++) {
-            if (adjMatrix[node][i] != 0) {
-                if (discoveryTime[i] == -1) {
-                    SCC(i, adjMatrix, n, lowLink, discoveryTime, inStack, stack, stackTop, timeCounter);
-                    lowLink[node] = Math.min(lowLink[node], lowLink[i]);
-                } else if (inStack[i]) {
-                    lowLink[node] = Math.min(lowLink[node], discoveryTime[i]);
-                }
-            }
-        }
-
-        if (lowLink[node] == discoveryTime[node]) {
-            System.out.print("SCC Found: ");
-            int w;
-            do {
-                w = stack[stackTop--];
-                inStack[w] = false;
-                System.out.print(w + " ");
-            } while (w != node);
-            System.out.println();
-        }
-    }
-
-  public static void displaySortedRatings() {
-
-        if (feedbackCount == 0) {
-            System.out.println("No ratings available.");
-            return;
-        }
-
-        int[] sortedRatings = Arrays.copyOf(feedbackRatings, feedbackCount); // Copy the ratings
-
-        // Bubble sort
-        for (int i = 0; i < feedbackCount - 1; i++) {
-            for (int j = 0; j < feedbackCount - i - 1; j++) {
-                if (sortedRatings[j] > sortedRatings[j + 1]) {
-                    int temp = sortedRatings[j];
-                    sortedRatings[j] = sortedRatings[j + 1];
-                    sortedRatings[j + 1] = temp;
-                }
-            }
-        }
-
-        System.out.println("Sorted Ratings:");
-        for (int i = 0; i < feedbackCount; i++) {
-            System.out.print(sortedRatings[i] + " ");
-        }
-        System.out.println();
-        System.out.println("Press Enter to return to Feedback Menu...");
-        new Scanner(System.in).nextLine(); // Wait for user to press Enter
- }
-//BFS fonksiyonu
-public static void BFS(int startNode, int[][] adjMatrix, int n) {
-   // Matris boyut kontrolü
-   if (adjMatrix == null || adjMatrix.length != n || adjMatrix[0].length != n) {
-       System.out.println("Error: Adjacency matrix dimensions do not match the given size.");
-       return;
-   }
-
-   // Ziyaret edilen düğümleri takip etmek için bir dizi
-   boolean[] visited = new boolean[n];
-
-   // java.util.Queue kullanarak kuyruğu başlatın
-   java.util.Queue<Integer> queue = new java.util.LinkedList<>();
-   visited[startNode] = true;
-   queue.add(startNode);
-
-   // BFS işlemini başlat
-   System.out.printf("BFS Traversal starting from node %d:%n", startNode);
-
-   while (!queue.isEmpty()) {
-       int currentNode = queue.poll(); // Kuyruktan bir düğüm çıkar
-       System.out.printf("Visited Node: %d%n", currentNode);
-
-       // Komşu düğümleri işle
-       for (int i = 0; i < n; i++) {
-           if (adjMatrix[currentNode][i] != 0 && !visited[i]) {
-               visited[i] = true;  // Düğüm ziyaret edildi olarak işaretlenir
-               queue.add(i);      // Kuyruğa eklenir
-           }
-       }
-   }
-}
-
-//DFS fonksiyonu
-public static void DFS(int node, boolean[] visited, int[][] adjMatrix, int n) {
-   visited[node] = true;
-   System.out.printf("Visited Node: %d\n", node);
-
-   for (int i = 0; i < n; i++) {
-       if (adjMatrix[node][i] != 0 && !visited[i]) {
-           DFS(i, visited, adjMatrix, n);
-       }
-   }
-}
-
-    // B+ ağacındaki yaprak düğümleri ve içeriklerini yazdırma
-   public static void printLeafNodes(BPlusTree tree) {
-        BPlusLeafNode current = (BPlusLeafNode) tree.root;
-        while (current != null) {
-            System.out.print("Leaf Node: ");
-            for (int i = 0; i < current.numKeys; i++) {
-                System.out.print(current.keys[i] + " ");
-            }
-            System.out.println();
-            current = current.next;
-        }
-    }
-   public static void gatherFeedbacks(BPlusTree tree) {
-	    Scanner scanner = new Scanner(System.in);
-
-	    System.out.print("Enter your feedback (max 255 characters): ");
-	    String feedback = scanner.nextLine();
-	    if (feedback.length() > 255) {
-	        feedback = feedback.substring(0, 255); // Sadece 255 karakter al
-	    }
-
-	    System.out.print("Rate the application (1 to 5): ");
-	    int rating = scanner.nextInt();
-	    scanner.nextLine(); // Buffer temizle
-
-	    if (rating >= 1 && rating <= 5) {
-	        if (feedbackCount < MAX_FEEDBACKS) {
-	            feedbackRatings[feedbackCount++] = rating; // feedbackRatings dizisine ekle
-	            insert(tree, rating); // B+ ağacına ekle
-	            System.out.println("Feedback received: " + feedback);
-	            System.out.println("Rating received: " + rating);
-	        } else {
-	            System.out.println("Maximum feedback limit reached.");
-	        }
-	    } else {
-	        System.out.println("Invalid rating. Please enter a value between 1 and 5.");
-	    }
-
-	    System.out.println("Current feedbackCount: " + feedbackCount);
-	}
-
-    // Feedback
-    static boolean feedback() {
-        BPlusTree tree = createBPlusTree();
-        Scanner scanner = new Scanner(System.in);
-        int choice;
-        while (true) {
-            System.out.println("\n----------- Feedback Menu -----------");
-            System.out.println("1. Gather Feedback");
-            System.out.println("2. View Sorted Ratings");
-            System.out.println("3. Print B+ Tree");
-            System.out.println("4. Perform BFS");
-            System.out.println("5. Perform DFS");
-            System.out.println("6. Find SCC (Tarjan Algorithm)");
-            System.out.println("7. Return to Main Menu");
-            System.out.print("Please enter your choice: ");
-
-            choice = scanner.nextInt();
-            scanner.nextLine();  // Clear the buffer
-
-            switch (choice) {
-                case 1:
-                    gatherFeedbacks(tree);
-                    break;
-                case 2:
-                    displaySortedRatings();
-                    break;
-                case 3:
-                    System.out.println("Feedbacks stored in B+ Tree:");
-                    printLeafNodes(tree);
-                    break;
-                case 4: { // Perform BFS
-                    if (feedbackCount == 0) {
-                        System.out.println("No feedback data available for BFS.");
-                        break;
-                    }
-
-                    System.out.printf("Enter starting feedback number for BFS (1 to %d): ", feedbackCount);
-                    int startNode = scanner.nextInt();
-                    scanner.nextLine(); // Buffer temizle
-
-                    if (startNode < 1 || startNode > feedbackCount) {
-                        System.out.println("Invalid node.");
-                        break;
-                    }
-
-                    startNode--; // 0 tabanlı indexe dönüştür
-
-                    // Adjacency matrix oluştur
-                    int[][] adjMatrix = new int[feedbackCount][feedbackCount];
-                    for (int i = 0; i < feedbackCount - 1; i++) {
-                        adjMatrix[i][i + 1] = adjMatrix[i + 1][i] = 1; // Örnek bağlantılar
-                    }
-
-                    BFS(startNode, adjMatrix, feedbackCount);
-                    break;
-                }
-                case 5: {
-                    System.out.printf("Enter starting feedback number for DFS (1 to %d): ", feedbackCount);
-                    int startNode = scanner.nextInt();
-                    scanner.nextLine();  // Clear the buffer
-
-                    if (startNode < 1 || startNode > feedbackCount) {
-                        System.out.println("Invalid node.");
-                        break;
-                    }
-                    startNode--;
-
-                    int[][] adjMatrix = new int[MAX_FEEDBACKS][MAX_FEEDBACKS];
-                    adjMatrix[0][1] = adjMatrix[1][0] = 1;
-                    adjMatrix[1][2] = adjMatrix[2][1] = 1;
-
-                    // visited dizisini boolean[] olarak tanımlayın
-                    boolean[] visited = new boolean[MAX_FEEDBACKS];
-                    DFS(startNode, visited, adjMatrix, feedbackCount);
-                    break;
-                }
-                case 6: { // Find SCC (Tarjan Algorithm)
-                    int n = feedbackCount; // Feedback sayısı kadar düğüm
-                    int[][] adjMatrix = new int[n][n];
-
-                    // Feedback verilerini bağlantı matrisine çevir
-                    for (int i = 0; i < n - 1; i++) {
-                        adjMatrix[i][i + 1] = 1; // Basit bir sıra bağlantısı (örnek)
-                    }
-
-                    System.out.println("Finding SCCs:");
-                    findSCCs(adjMatrix, n);
-                    break;
-                }
-                case 7:
-                    return false;
-                default:
-                    System.out.println("Invalid choice. Try again.");
-            }
-        }
-    }
-
-}
