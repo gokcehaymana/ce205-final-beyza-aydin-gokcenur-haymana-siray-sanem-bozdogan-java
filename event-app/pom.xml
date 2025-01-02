@@ -17,6 +17,7 @@
 		<url>https://github.com/ucoruh/eclipse-java-maven-template</url>
 	</scm>
 	<inceptionYear>2023</inceptionYear>
+	
 	<developers>
 		<developer>
 			<name>Beyza Aydin</name>
@@ -135,9 +136,11 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
+
+
 				<configuration>
-					<source>15</source>
-					<target>15</target>
+					<source>1.8</source>
+					<target>1.8</target>
 				</configuration>
 			</plugin>
 			<plugin>

@@ -12,6 +12,8 @@
 package com.beyza.gokce.siray.event;
 
 import java.util.Arrays;
+import java.io.PrintStream;
+import java.util.Scanner;
 
 /**
  *
@@ -26,9 +28,25 @@ import java.util.Arrays;
 import java.util.Arrays;
 
 public class EventApp {
+
+    /**
+     * The main method serves as the entry point for the Java application.
+     * It orchestrates the initialization of the event management system.
+     * 
+     * <p>Workflow:</p>
+     * <ol>
+     *   <li>Loads event data from a file using the {@link Event#loadHashTableFromFile()} method.</li>
+     *   <li>Displays the main menu using the {@link Event#mainMenu()} method for user interactions.</li>
+     * </ol>1
+     * 
+     * @param args Command-line arguments (not utilized in this application).
+     */
     public static void main(String[] args) {
-        Event.loadHashTableFromFile(); // Event sınıfındaki yöntemi çağırıyoruz
-        Event.mainMenu(); // Event sınıfındaki mainMenu metodunu çağırıyoruz
+        Scanner scanner = new Scanner(System.in); // Kullanıcı girişini okuyacak
+        PrintStream out = System.out; // Konsola çıktı gönderecek
+
+        Event event = new Event(scanner, out);
+        Event.loadHashTableFromFile(); 
+        Event.mainMenu(); 
     }
 }
-

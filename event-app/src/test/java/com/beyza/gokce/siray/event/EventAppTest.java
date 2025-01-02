@@ -1,66 +1,62 @@
-/**
-
-@file EventAppTest.java
-@brief This file contains the test cases for the EventApp class.
-@details This file includes test methods to validate the functionality of the EventApp class. It uses JUnit for unit testing.
-*/
 package com.beyza.gokce.siray.event;
 
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import com.beyza.gokce.siray.event.EventApp;
-
-
-/**
-
-@class EventAppTest
-@brief This class represents the test class for the EventApp class.
-@details The EventAppTest class provides test methods to verify the behavior of the EventApp class. It includes test methods for successful execution, object creation, and error handling scenarios.
-@author ugur.coruh
-*/
 public class EventAppTest {
 
-  /**
-   * @brief This method is executed once before all test methods.
-   * @throws Exception
-   */
-  @BeforeClass
-  public static void setUpBeforeClass() throws Exception {
-  }
+    private final PrintStream originalOut = System.out;
+    private final ByteArrayOutputStream testOut = new ByteArrayOutputStream();
 
-  /**
-   * @brief This method is executed once after all test methods.
-   * @throws Exception
-   */
-  @AfterClass
-  public static void tearDownAfterClass() throws Exception {
-  }
+    private final ByteArrayInputStream testIn = new ByteArrayInputStream("6\n".getBytes());
 
-  /**
-   * @brief This method is executed before each test method.
-   * @throws Exception
-   */
-  @Before
-  public void setUp() throws Exception {
-  }
+    @Before
+    public void setUp() throws Exception {
+        System.setOut(new PrintStream(testOut));
+        System.setIn(testIn);
+    }
 
-  /**
-   * @brief This method is executed after each test method.
-   * @throws Exception
-   */
-  @After
-  public void tearDown() throws Exception {
-  }
+    @After
+    public void tearDown() throws Exception {
+        System.setOut(originalOut);
+        System.setIn(System.in);
+    }
 
+    /**
+     * Test case to verify that the main method executes the expected workflow.
+     */
+    @Test
+    public void testMainMethodWorkflow() {
+        // Act: Call the main method
+        String[] args = {};
+        EventApp eventapp = new EventApp();
+        eventapp.main(args);
+
+        // Assert: Check the output
+        String output = testOut.toString();
+
+        // Verify that loadHashTableFromFile method has executed (implicitly by no errors)
+        assertTrue("Output should include welcome message", output.contains("WELCOME TO OUR PLANNER"));
+        assertTrue("Output should include menu options", output.contains("1. User Authentication"));
+        assertTrue("Output should include exit message", output.contains("Exiting the program. Goodbye!"));
+    }
+
+    /**
+     * Test case to ensure loadHashTableFromFile correctly handles a file.
+     */
+    @Test
+    public void testLoadHashTableFromFile() {
+        // Arrange: Prepare a dummy file (not necessary to create an actual file for this test)
+        Event.loadHashTableFromFile();
+
+        // Assert: Check if the hash table is populated without exceptions
+        assertNotNull("Hash table should not be null", Event.getHashTable());
+    }
 }
